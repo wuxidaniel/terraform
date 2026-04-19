@@ -91,7 +91,13 @@ resource "aws_instance" "public_host" {
   # Upload a single file
   provisioner "file" {
     source      = "~/.ssh/id_rsa"
-    destination = "~/.ssh/id_rsa"
+    destination = "/home/ubuntu/.ssh/id_rsa"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 600 /home/ubuntu/.ssh/id_rsa"
+    ]
   }
 
   user_data = <<-EOF
