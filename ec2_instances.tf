@@ -80,6 +80,20 @@ resource "aws_instance" "public_host" {
   subnet_id              = data.aws_subnet.public.id        # 👈 existing subnet
   vpc_security_group_ids = [data.aws_security_group.public_host.id]
 
+  # SSH connection details for provisioners
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("~/.ssh/id_rsa")
+    host        = self.public_ip
+  }
+
+  # Upload a single file
+  provisioner "file" {
+    source      = "~/.ssh/id_rsa"
+    destination = "~/.ssh/id_rsa"
+  }
+
   user_data = <<-EOF
     #!/bin/bash
     hostname public-host
